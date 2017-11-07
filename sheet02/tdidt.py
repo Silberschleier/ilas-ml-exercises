@@ -1,5 +1,7 @@
 import csv
 from math import log
+from operator import itemgetter
+
 
 def read_data(path):
     entries = []
@@ -44,7 +46,14 @@ def _inverted_gain(samples, attribute, threshold):
     return _entropy(samples_below, _pos_below_frac) + _entropy(samples_above, _pos_above_frac)
 
 
-def tidt(samples, attributes):
+def tidt(samples, attributes, attribute_values):
     if _is_perfectly_classified(samples):
         return {'value': samples[0]['class_label'], 'left': None, 'right': None}
     # TODO: no tests splits the data
+
+    candidates = []
+    for attribute in attributes:
+        for value in attribute_values[attribute]:
+            candidates.append((attribute, value, _inverted_gain(samples, attribute, value)))
+
+    best_attribute, best_value, best_gain = min(candidates, key=itemgetter(2))
