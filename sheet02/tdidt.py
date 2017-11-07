@@ -33,17 +33,22 @@ def _pos_classification_fraction(samples):
     return positive / len(samples)
 
 
-def _entropy(samples, pos_fraction):
-    return len(samples)/len(samples)*((pos_fraction*log(1/(pos_fraction), 2))+(1-pos_fraction*log(1/(1-pos_fraction), 2)))
+def _entropy(samples, sample_subset, pos_fraction):
+    return len(sample_subset) / len(samples) * ((pos_fraction * log(1 / pos_fraction, 2)) + (1 - pos_fraction * log(1 / (1 - pos_fraction), 2)))
+
+
+def _split_samples(samples, attribute, threshold):
+    samples_below = [x for x in samples if x[attribute] <= threshold]
+    samples_above = [x for x in samples if x[attribute] > threshold]
+    return samples_below, samples_above
 
 
 def _inverted_gain(samples, attribute, threshold):
-    samples_below = [x for x in samples if x[attribute] <= threshold]
-    samples_above = [x for x in samples if x[attribute] > threshold]
+    samples_below, samples_above = _split_samples(samples, attribute, threshold)
     _pos_below_frac = _pos_classification_fraction(samples_below)
     _pos_above_frac = _pos_classification_fraction(samples_above)
 
-    return _entropy(samples_below, _pos_below_frac) + _entropy(samples_above, _pos_above_frac)
+    return _entropy(samples, samples_below, _pos_below_frac) + _entropy(samples, samples_above, _pos_above_frac)
 
 
 def tidt(samples, attributes, attribute_values):
@@ -53,7 +58,16 @@ def tidt(samples, attributes, attribute_values):
 
     candidates = []
     for attribute in attributes:
-        for value in attribute_values[attribute]:
-            candidates.append((attribute, value, _inverted_gain(samples, attribute, value)))
+        for threshold in attribute_values[attribute]:
+            candidates.append((attribute, threshold, _inverted_gain(samples, attribute, threshold)))
 
-    best_attribute, best_value, best_gain = min(candidates, key=itemgetter(2))
+    best_attribute, best_threshold, best_gain = min(candidates, key=itemgetter(2))
+    samples_below, samples_above = _split_samples(samples, best_attribute, best_threshold)
+
+    return {
+        'attribute': best_attribute,
+        'threshold': best_threshold,
+        'samples': len(samples),
+        'left': tidt(samples_below, attributes, attribute_values),
+        'right': tidt(samples_above, attributes, attribute_values)
+    }
