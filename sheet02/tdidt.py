@@ -1,6 +1,7 @@
 import csv
 from math import log
 from operator import itemgetter
+from pprint import pprint
 
 
 def read_data(path):
@@ -30,10 +31,20 @@ def _pos_classification_fraction(samples):
     for sample in samples:
         if sample['class_label'] == 1:
             positive += 1
-    return positive / len(samples)
+    # avoid division by 0
+    if len(samples) == 0:
+        res = 0
+    else:
+        res = positive / len(samples)
+    return res
 
 
 def _entropy(samples, sample_subset, pos_fraction):
+    # avoid division by 0
+    if pos_fraction == 0:
+        pos_fraction = 0.0001
+    if pos_fraction == 1:
+        pos_fraction = 0.999
     return len(sample_subset) / len(samples) * ((pos_fraction * log(1 / pos_fraction, 2)) + (1 - pos_fraction * log(1 / (1 - pos_fraction), 2)))
 
 
@@ -51,9 +62,9 @@ def _inverted_gain(samples, attribute, threshold):
     return _entropy(samples, samples_below, _pos_below_frac) + _entropy(samples, samples_above, _pos_above_frac)
 
 
-def tidt(samples, attributes, attribute_values):
+def tdidt(samples, attributes, attribute_values):
     if _is_perfectly_classified(samples):
-        return {'value': samples[0]['class_label'], 'left': None, 'right': None}
+        return {'value': samples[0]['class_label'], 'left': None, 'right': None, 'samples': len(samples)}
     # TODO: no tests splits the data
 
     candidates = []
@@ -67,7 +78,15 @@ def tidt(samples, attributes, attribute_values):
     return {
         'attribute': best_attribute,
         'threshold': best_threshold,
+        'gain': best_gain,
         'samples': len(samples),
-        'left': tidt(samples_below, attributes, attribute_values),
-        'right': tidt(samples_above, attributes, attribute_values)
+        'left': tdidt(samples_below, attributes, attribute_values),
+        'right': tdidt(samples_above, attributes, attribute_values)
     }
+
+if __name__ == '__main__':
+    header, attribute_values, entries = read_data("gene_expression_training.csv")
+    header.remove('class_label')
+    tree = tdidt(entries, header, attribute_values)
+
+    pprint(tree)
