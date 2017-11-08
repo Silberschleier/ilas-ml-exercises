@@ -30,10 +30,20 @@ def _pos_classification_fraction(samples):
     for sample in samples:
         if sample['class_label'] == 1:
             positive += 1
-    return positive / len(samples)
+    # avoid division by 0
+    if len(samples) == 0:
+        res = 0
+    else:
+        res = positive / len(samples)
+    return res
 
 
 def _entropy(samples, sample_subset, pos_fraction):
+    # avoid division by 0
+    if pos_fraction == 0:
+        pos_fraction = 0.0001
+    if pos_fraction == 1:
+        pos_fraction = 0.999
     return len(sample_subset) / len(samples) * ((pos_fraction * log(1 / pos_fraction, 2)) + (1 - pos_fraction * log(1 / (1 - pos_fraction), 2)))
 
 
@@ -71,3 +81,9 @@ def tidt(samples, attributes, attribute_values):
         'left': tidt(samples_below, attributes, attribute_values),
         'right': tidt(samples_above, attributes, attribute_values)
     }
+    
+#header, attribute_values, entries = read_data("gene_expression_training.csv")
+
+#tree = tidt(entries, header, attribute_values)
+
+#print(tree)
