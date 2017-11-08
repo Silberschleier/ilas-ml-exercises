@@ -1,6 +1,7 @@
 import csv
 from math import log
 from operator import itemgetter
+from pprint import pprint
 
 
 def read_data(path):
@@ -61,9 +62,9 @@ def _inverted_gain(samples, attribute, threshold):
     return _entropy(samples, samples_below, _pos_below_frac) + _entropy(samples, samples_above, _pos_above_frac)
 
 
-def tidt(samples, attributes, attribute_values):
+def tdidt(samples, attributes, attribute_values):
     if _is_perfectly_classified(samples):
-        return {'value': samples[0]['class_label'], 'left': None, 'right': None}
+        return {'value': samples[0]['class_label'], 'left': None, 'right': None, 'samples': len(samples)}
     # TODO: no tests splits the data
 
     candidates = []
@@ -77,13 +78,15 @@ def tidt(samples, attributes, attribute_values):
     return {
         'attribute': best_attribute,
         'threshold': best_threshold,
+        'gain': best_gain,
         'samples': len(samples),
-        'left': tidt(samples_below, attributes, attribute_values),
-        'right': tidt(samples_above, attributes, attribute_values)
+        'left': tdidt(samples_below, attributes, attribute_values),
+        'right': tdidt(samples_above, attributes, attribute_values)
     }
-    
-#header, attribute_values, entries = read_data("gene_expression_training.csv")
 
-#tree = tidt(entries, header, attribute_values)
+if __name__ == '__main__':
+    header, attribute_values, entries = read_data("gene_expression_training.csv")
+    header.remove('class_label')
+    tree = tdidt(entries, header, attribute_values)
 
-#print(tree)
+    pprint(tree)
