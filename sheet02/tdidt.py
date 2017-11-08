@@ -14,7 +14,7 @@ def read_data(path):
             entries.append({label: float(value) for label, value in zip(header, row)})
             for attribute, value in zip(header, row):
                 attribute_values[attribute].append(float(value))
-
+    header.remove('class_label')
     return header, attribute_values, entries
 
 
@@ -45,7 +45,7 @@ def _entropy(samples, sample_subset, pos_fraction):
         pos_fraction = 0.0001
     if pos_fraction == 1:
         pos_fraction = 0.999
-    return len(sample_subset) / len(samples) * ((pos_fraction * log(1 / pos_fraction, 2)) + (1 - pos_fraction * log(1 / (1 - pos_fraction), 2)))
+    return (len(sample_subset) / len(samples)) * ((pos_fraction * log(1 / pos_fraction, 2)) + ((1 - pos_fraction) * log(1 / (1 - pos_fraction), 2)))
 
 
 def _split_samples(samples, attribute, threshold):
@@ -83,10 +83,47 @@ def tdidt(samples, attributes, attribute_values):
         'left': tdidt(samples_below, attributes, attribute_values),
         'right': tdidt(samples_above, attributes, attribute_values)
     }
+    
 
+def _is_leaf(tree):
+    return (tree['left'] == None and tree['right'] == None)
+    
+    
+def classify_one_sample(tree, sample, sample_index, attributes, attribute_values):
+    if _is_leaf(tree) == True:
+        return tree['value']
+    else:
+        if attribute_values[tree['attribute']][sample_index] <= tree['threshold']:
+            return classify_one_sample(tree['left'], sample, sample_index, attributes, attribute_values)
+        else:
+            return classify_one_sample(tree['right'], sample, sample_index, attributes, attribute_values)
+    
+    
+def classify(tree, samples, attributes, attribute_values):
+    res = []
+    for i in range(len(samples)):
+        res.append(classify_one_sample(tree, samples[i], i, attributes, attribute_values))
+    return res
+    
+    
+def _accuracy(result, class_labels):
+    true_classified = 0
+    for i in range(len(result)):
+        if result[i] == class_labels[i]:
+            true_classified += 1
+    return true_classified / len(result)
+    
+    
 if __name__ == '__main__':
-    header, attribute_values, entries = read_data("gene_expression_training.csv")
-    header.remove('class_label')
+    header, attribute_values, entries = read_data("data/gene_expression_training.csv")
     tree = tdidt(entries, header, attribute_values)
-
-    pprint(tree)
+    #pprint(tree)
+    
+    header_test, attribute_values_test, entries_test = read_data("data/gene_expression_test.csv")
+    res = classify(tree, entries_test, header_test, attribute_values_test)
+    #print(res)
+    class_labels = []
+    for entry in entries_test:
+        class_labels.append(entry['class_label'])
+    #print(class_labels)
+    print("Accuracy: " + str(_accuracy(res, class_labels)))
