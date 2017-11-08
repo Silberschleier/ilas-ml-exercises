@@ -2,6 +2,7 @@ import csv
 from math import log
 from operator import itemgetter
 from pprint import pprint
+from .visualization import *
 
 
 def read_data(path):
@@ -116,6 +117,7 @@ if __name__ == '__main__':
     header, attribute_values, entries = read_data("data/gene_expression_training.csv")
     tree = tdidt(entries, header, attribute_values)
 
+    generate_dot_from_graph(tree, 'output.dot')
     #pprint(tree)
     
     header_test, attribute_values_test, entries_test = read_data("data/gene_expression_test.csv")
