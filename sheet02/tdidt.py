@@ -41,10 +41,8 @@ def _pos_classification_fraction(samples):
 
 def _entropy(samples, sample_subset, pos_fraction):
     # avoid division by 0
-    if pos_fraction == 0:
-        pos_fraction = 0.0001
-    if pos_fraction == 1:
-        pos_fraction = 0.999
+    if pos_fraction == 0 or pos_fraction == 1:
+        return 0
     return (len(sample_subset) / len(samples)) * ((pos_fraction * log(1 / pos_fraction, 2)) + ((1 - pos_fraction) * log(1 / (1 - pos_fraction), 2)))
 
 
@@ -117,6 +115,7 @@ def _accuracy(result, class_labels):
 if __name__ == '__main__':
     header, attribute_values, entries = read_data("data/gene_expression_training.csv")
     tree = tdidt(entries, header, attribute_values)
+
     #pprint(tree)
     
     header_test, attribute_values_test, entries_test = read_data("data/gene_expression_test.csv")
