@@ -128,7 +128,7 @@ def _accuracy(result, class_labels):
     
     
 if __name__ == '__main__':
-    depth = 3
+    depth = 10
     header_train, attribute_values_train, entries_train = read_data("data/gene_expression_training.csv")
     tree = tdidt(entries_train, header_train, attribute_values_train, depth)
 
