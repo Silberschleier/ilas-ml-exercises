@@ -1,8 +1,6 @@
 import csv
 from math import log
 from operator import itemgetter
-from pprint import pprint
-from .visualization import *
 
 
 def read_data(path):
@@ -98,55 +96,3 @@ def tdidt(samples, attributes, attribute_values, max_depth):
     }
     
 
-def _is_leaf(tree):
-    return (tree['left'] == None and tree['right'] == None)
-    
-    
-def classify_one_sample(tree, sample, sample_index, attributes, attribute_values):
-    if _is_leaf(tree) == True:
-        return tree['value']
-    else:
-        if attribute_values[tree['attribute']][sample_index] <= tree['threshold']:
-            return classify_one_sample(tree['left'], sample, sample_index, attributes, attribute_values)
-        else:
-            return classify_one_sample(tree['right'], sample, sample_index, attributes, attribute_values)
-    
-    
-def classify(tree, samples, attributes, attribute_values):
-    res = []
-    for i in range(len(samples)):
-        res.append(classify_one_sample(tree, samples[i], i, attributes, attribute_values))
-    return res
-    
-    
-def _accuracy(result, class_labels):
-    true_classified = 0
-    for i in range(len(result)):
-        if result[i] == class_labels[i]:
-            true_classified += 1
-    return true_classified / len(result)
-    
-    
-if __name__ == '__main__':
-    depth = 10
-    header_train, attribute_values_train, entries_train = read_data("data/gene_expression_training.csv")
-    tree = tdidt(entries_train, header_train, attribute_values_train, depth)
-
-    generate_dot_from_graph(tree, 'output_depth-{}.dot'.format(depth))
-    #pprint(tree)
-    
-    header_test, attribute_values_test, entries_test = read_data("data/gene_expression_test.csv")
-    res_test = classify(tree, entries_test, header_test, attribute_values_test)
-    res_train = classify(tree, entries_train, header_train, attribute_values_train)
-
-    class_labels_test = []
-    for entry in entries_test:
-        class_labels_test.append(entry['class_label'])
-
-    class_labels_train = []
-    for entry in entries_train:
-        class_labels_train.append(entry['class_label'])
-
-    print("Depth: {}".format(depth))
-    print("Accuracy Train: " + str(_accuracy(res_train, class_labels_train)))
-    print("Accuracy Test: " + str(_accuracy(res_test, class_labels_test)))

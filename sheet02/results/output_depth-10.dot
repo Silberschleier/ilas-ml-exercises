@@ -1,0 +1,305 @@
+strict digraph "" {
+	node [label="\N",
+		shape=box
+	];
+	0	 [color="#5191f7",
+		label="APP &le; 0.3985?
+samples = 701 (355+, 346-)
+gain = 0.8187"];
+	1	 [color="#5191f7",
+		label="pMTOR &le; 0.6062?
+samples = 319 (76+, 243-)
+gain = 0.5971"];
+	0 -> 1	 [headlabel=True];
+	30	 [color="#5191f7",
+		label="AMPKA &le; 0.3848?
+samples = 382 (279+, 103-)
+gain = 0.6887"];
+	0 -> 30	 [headlabel=False];
+	2	 [color="#5191f7",
+		label="S6 &le; 0.3597?
+samples = 33 (31+, 2-)
+gain = 0"];
+	1 -> 2	 [headlabel=True];
+	5	 [color="#5191f7",
+		label="GluR3 &le; 0.2045?
+samples = 286 (45+, 241-)
+gain = 0.471"];
+	1 -> 5	 [headlabel=False];
+	3	 [color="#ffd5b2",
+		label="class_label = False
+samples = 2 (0+, 2-)"];
+	2 -> 3	 [headlabel=True];
+	4	 [color="#cdffb2",
+		label="class_label = True
+samples = 31 (31+, 0-)"];
+	2 -> 4	 [headlabel=False];
+	6	 [color="#5191f7",
+		label="NR2B &le; 0.49?
+samples = 100 (39+, 61-)
+gain = 0.6925"];
+	5 -> 6	 [headlabel=True];
+	23	 [color="#5191f7",
+		label="S6 &le; 0.4454?
+samples = 186 (6+, 180-)
+gain = 0.1359"];
+	5 -> 23	 [headlabel=False];
+	7	 [color="#cdffb2",
+		label="class_label = True
+samples = 17 (17+, 0-)"];
+	6 -> 7	 [headlabel=True];
+	8	 [color="#5191f7",
+		label="APP &le; 0.3686?
+samples = 83 (22+, 61-)
+gain = 0.6715"];
+	6 -> 8	 [headlabel=False];
+	9	 [color="#5191f7",
+		label="AcetylH3K9 &le; 0.37?
+samples = 47 (4+, 43-)
+gain = 0.1465"];
+	8 -> 9	 [headlabel=True];
+	14	 [color="#5191f7",
+		label="BDNF &le; 0.3096?
+samples = 36 (18+, 18-)
+gain = 0.557"];
+	8 -> 14	 [headlabel=False];
+	10	 [color="#5191f7",
+		label="ARC &le; 0.1435?
+samples = 44 (1+, 43-)
+gain = 0"];
+	9 -> 10	 [headlabel=True];
+	13	 [color="#cdffb2",
+		label="class_label = True
+samples = 3 (3+, 0-)"];
+	9 -> 13	 [headlabel=False];
+	11	 [color="#ffd5b2",
+		label="class_label = False
+samples = 43 (0+, 43-)"];
+	10 -> 11	 [headlabel=True];
+	12	 [color="#cdffb2",
+		label="class_label = True
+samples = 1 (1+, 0-)"];
+	10 -> 12	 [headlabel=False];
+	15	 [color="#5191f7",
+		label="ERK &le; 1.5218?
+samples = 15 (14+, 1-)
+gain = 0"];
+	14 -> 15	 [headlabel=True];
+	18	 [color="#5191f7",
+		label="AKT &le; 0.8477?
+samples = 21 (4+, 17-)
+gain = 0.2653"];
+	14 -> 18	 [headlabel=False];
+	16	 [color="#ffd5b2",
+		label="class_label = False
+samples = 1 (0+, 1-)"];
+	15 -> 16	 [headlabel=True];
+	17	 [color="#cdffb2",
+		label="class_label = True
+samples = 14 (14+, 0-)"];
+	15 -> 17	 [headlabel=False];
+	19	 [color="#5191f7",
+		label="pAKT &le; 0.2285?
+samples = 18 (1+, 17-)
+gain = 0"];
+	18 -> 19	 [headlabel=True];
+	22	 [color="#cdffb2",
+		label="class_label = True
+samples = 3 (3+, 0-)"];
+	18 -> 22	 [headlabel=False];
+	20	 [color="#cdffb2",
+		label="class_label = True
+samples = 1 (1+, 0-)"];
+	19 -> 20	 [headlabel=True];
+	21	 [color="#ffd5b2",
+		label="class_label = False
+samples = 17 (0+, 17-)"];
+	19 -> 21	 [headlabel=False];
+	24	 [color="#ffd5b2",
+		label="class_label = False
+samples = 142 (0+, 142-)"];
+	23 -> 24	 [headlabel=True];
+	25	 [color="#5191f7",
+		label="PKCA &le; 0.2881?
+samples = 44 (6+, 38-)
+gain = 0.3135"];
+	23 -> 25	 [headlabel=False];
+	26	 [color="#5191f7",
+		label="GFAP &le; 0.1239?
+samples = 14 (6+, 8-)
+gain = 0"];
+	25 -> 26	 [headlabel=True];
+	29	 [color="#ffd5b2",
+		label="class_label = False
+samples = 30 (0+, 30-)"];
+	25 -> 29	 [headlabel=False];
+	27	 [color="#cdffb2",
+		label="class_label = True
+samples = 6 (6+, 0-)"];
+	26 -> 27	 [headlabel=True];
+	28	 [color="#ffd5b2",
+		label="class_label = False
+samples = 8 (0+, 8-)"];
+	26 -> 28	 [headlabel=False];
+	31	 [color="#5191f7",
+		label="pNUMB &le; 0.3648?
+samples = 211 (192+, 19-)
+gain = 0.3334"];
+	30 -> 31	 [headlabel=True];
+	46	 [color="#5191f7",
+		label="APP &le; 0.4581?
+samples = 171 (87+, 84-)
+gain = 0.6915"];
+	30 -> 46	 [headlabel=False];
+	32	 [color="#5191f7",
+		label="P3525 &le; 0.2385?
+samples = 143 (141+, 2-)
+gain = 0"];
+	31 -> 32	 [headlabel=True];
+	35	 [color="#5191f7",
+		label="BAX &le; 0.1774?
+samples = 68 (51+, 17-)
+gain = 0.5415"];
+	31 -> 35	 [headlabel=False];
+	33	 [color="#ffd5b2",
+		label="class_label = False
+samples = 2 (0+, 2-)"];
+	32 -> 33	 [headlabel=True];
+	34	 [color="#cdffb2",
+		label="class_label = True
+samples = 141 (141+, 0-)"];
+	32 -> 34	 [headlabel=False];
+	36	 [color="#5191f7",
+		label="ARC &le; 0.1148?
+samples = 37 (20+, 17-)
+gain = 0.6164"];
+	35 -> 36	 [headlabel=True];
+	45	 [color="#cdffb2",
+		label="class_label = True
+samples = 31 (31+, 0-)"];
+	35 -> 45	 [headlabel=False];
+	37	 [color="#5191f7",
+		label="pNUMB &le; 0.407?
+samples = 24 (19+, 5-)
+gain = 0.2387"];
+	36 -> 37	 [headlabel=True];
+	42	 [color="#5191f7",
+		label="BDNF &le; 0.3172?
+samples = 13 (1+, 12-)
+gain = 0"];
+	36 -> 42	 [headlabel=False];
+	38	 [color="#5191f7",
+		label="JNK &le; 0.322?
+samples = 20 (19+, 1-)
+gain = 0"];
+	37 -> 38	 [headlabel=True];
+	41	 [color="#ffd5b2",
+		label="class_label = False
+samples = 4 (0+, 4-)"];
+	37 -> 41	 [headlabel=False];
+	39	 [color="#cdffb2",
+		label="class_label = True
+samples = 19 (19+, 0-)"];
+	38 -> 39	 [headlabel=True];
+	40	 [color="#ffd5b2",
+		label="class_label = False
+samples = 1 (0+, 1-)"];
+	38 -> 40	 [headlabel=False];
+	43	 [color="#cdffb2",
+		label="class_label = True
+samples = 1 (1+, 0-)"];
+	42 -> 43	 [headlabel=True];
+	44	 [color="#ffd5b2",
+		label="class_label = False
+samples = 12 (0+, 12-)"];
+	42 -> 44	 [headlabel=False];
+	47	 [color="#5191f7",
+		label="DYRK1A &le; 0.3113?
+samples = 99 (24+, 75-)
+gain = 0.4374"];
+	46 -> 47	 [headlabel=True];
+	58	 [color="#5191f7",
+		label="BRAF &le; 0.4863?
+samples = 72 (63+, 9-)
+gain = 0.2928"];
+	46 -> 58	 [headlabel=False];
+	48	 [color="#5191f7",
+		label="pBRAF &le; 0.1963?
+samples = 17 (16+, 1-)
+gain = 0"];
+	47 -> 48	 [headlabel=True];
+	51	 [color="#5191f7",
+		label="AcetylH3K9 &le; 0.1381?
+samples = 82 (8+, 74-)
+gain = 0.3114"];
+	47 -> 51	 [headlabel=False];
+	49	 [color="#ffd5b2",
+		label="class_label = False
+samples = 1 (0+, 1-)"];
+	48 -> 49	 [headlabel=True];
+	50	 [color="#cdffb2",
+		label="class_label = True
+samples = 16 (16+, 0-)"];
+	48 -> 50	 [headlabel=False];
+	52	 [color="#ffd5b2",
+		label="class_label = False
+samples = 51 (0+, 51-)"];
+	51 -> 52	 [headlabel=True];
+	53	 [color="#5191f7",
+		label="SNCA &le; 0.1674?
+samples = 31 (8+, 23-)
+gain = 0.4327"];
+	51 -> 53	 [headlabel=False];
+	54	 [color="#5191f7",
+		label="TRKA &le; 0.9423?
+samples = 26 (3+, 23-)
+gain = 0"];
+	53 -> 54	 [headlabel=True];
+	57	 [color="#cdffb2",
+		label="class_label = True
+samples = 5 (5+, 0-)"];
+	53 -> 57	 [headlabel=False];
+	55	 [color="#ffd5b2",
+		label="class_label = False
+samples = 23 (0+, 23-)"];
+	54 -> 55	 [headlabel=True];
+	56	 [color="#cdffb2",
+		label="class_label = True
+samples = 3 (3+, 0-)"];
+	54 -> 56	 [headlabel=False];
+	59	 [color="#5191f7",
+		label="pNR2A &le; 1.1385?
+samples = 58 (57+, 1-)
+gain = 0"];
+	58 -> 59	 [headlabel=True];
+	62	 [color="#5191f7",
+		label="pJNK &le; 0.3438?
+samples = 14 (6+, 8-)
+gain = 0.2958"];
+	58 -> 62	 [headlabel=False];
+	60	 [color="#cdffb2",
+		label="class_label = True
+samples = 57 (57+, 0-)"];
+	59 -> 60	 [headlabel=True];
+	61	 [color="#ffd5b2",
+		label="class_label = False
+samples = 1 (0+, 1-)"];
+	59 -> 61	 [headlabel=False];
+	63	 [color="#5191f7",
+		label="pCREB &le; 0.2684?
+samples = 7 (6+, 1-)
+gain = 0"];
+	62 -> 63	 [headlabel=True];
+	66	 [color="#ffd5b2",
+		label="class_label = False
+samples = 7 (0+, 7-)"];
+	62 -> 66	 [headlabel=False];
+	64	 [color="#cdffb2",
+		label="class_label = True
+samples = 6 (6+, 0-)"];
+	63 -> 64	 [headlabel=True];
+	65	 [color="#ffd5b2",
+		label="class_label = False
+samples = 1 (0+, 1-)"];
+	63 -> 65	 [headlabel=False];
+}
