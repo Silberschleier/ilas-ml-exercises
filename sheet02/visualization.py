@@ -3,7 +3,7 @@ import pygraphviz as pgv
 index = 0
 
 
-def _add_node(G, subtree, parent):
+def _add_node(G, subtree, parent, left):
     global index
 
     node_id = index
@@ -17,9 +17,9 @@ def _add_node(G, subtree, parent):
                                                                                            round(subtree['gain'], 4)),
                    color='#5191f7')
         if subtree['left']:
-            _add_node(G, subtree['left'], node_id)
+            _add_node(G, subtree['left'], node_id, True)
         if subtree['right']:
-            _add_node(G, subtree['right'], node_id)
+            _add_node(G, subtree['right'], node_id, False)
     else:
         # This is a leaf
         if subtree['value'] == 1:
@@ -33,13 +33,13 @@ def _add_node(G, subtree, parent):
                    color=color)
 
     if parent >= 0:
-        G.add_edge(parent, node_id)
+        G.add_edge(parent, node_id, headlabel='{}'.format(left))
 
 
 def generate_dot_from_graph(tree, outputpath):
-    G = pgv.AGraph()
+    G = pgv.AGraph(directed=True)
     G.node_attr['shape'] = 'box'
 
-    _add_node(G, tree, -1)
+    _add_node(G, tree, -1, False)
 
     G.write(outputpath)
