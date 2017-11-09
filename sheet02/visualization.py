@@ -9,7 +9,13 @@ def _add_node(G, subtree, parent):
     node_id = index
     index += 1
     if 'threshold' in subtree:
-        G.add_node(node_id, label="{} &le; {}?\nsamples = {}\ngain = {}".format(subtree['attribute'], subtree['threshold'], subtree['samples'], round(subtree['gain'], 4)), color='#5191f7')
+        G.add_node(node_id, label="{} &le; {}?\nsamples = {} ({}+, {}-)\ngain = {}".format(subtree['attribute'],
+                                                                                           subtree['threshold'],
+                                                                                           subtree['samples'],
+                                                                                           subtree['pos_samples'],
+                                                                                           subtree['neg_samples'],
+                                                                                           round(subtree['gain'], 4)),
+                   color='#5191f7')
         if subtree['left']:
             _add_node(G, subtree['left'], node_id)
         if subtree['right']:
@@ -20,7 +26,11 @@ def _add_node(G, subtree, parent):
             color = '#cdffb2'
         else:
             color = '#ffd5b2'
-        G.add_node(node_id, label="class_label = {}\nsamples = {}".format(bool(subtree['value']), subtree['samples']), color=color)
+        G.add_node(node_id,
+                   label="class_label = {}\nsamples = {} ({}+, {}-)".format(bool(subtree['value']), subtree['samples'],
+                                                                            subtree['pos_samples'],
+                                                                            subtree['neg_samples']),
+                   color=color)
 
     if parent >= 0:
         G.add_edge(parent, node_id)

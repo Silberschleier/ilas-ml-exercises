@@ -27,11 +27,16 @@ def _is_perfectly_classified(samples):
     return True
 
 
-def _pos_classification_fraction(samples):
+def _pos_classification_count(samples):
     positive = 0
     for sample in samples:
         if sample['class_label'] == 1:
             positive += 1
+    return positive
+
+
+def _pos_classification_fraction(samples):
+    positive = _pos_classification_count(samples)
     # avoid division by 0
     if len(samples) == 0:
         res = 0
@@ -61,10 +66,19 @@ def _inverted_gain(samples, attribute, threshold):
     return _entropy(samples, samples_below, _pos_below_frac) + _entropy(samples, samples_above, _pos_above_frac)
 
 
-def tdidt(samples, attributes, attribute_values):
+def tdidt(samples, attributes, attribute_values, max_depth):
+    count_positive = _pos_classification_count(samples)
+    count_negative = len(samples) - count_positive
     if _is_perfectly_classified(samples):
-        return {'value': samples[0]['class_label'], 'left': None, 'right': None, 'samples': len(samples)}
-    # TODO: no tests splits the data
+        return {'value': samples[0]['class_label'], 'left': None, 'right': None, 'samples': len(samples), 'pos_samples': count_positive, 'neg_samples': count_negative}
+
+    if max_depth == 0:
+        if count_positive >= count_negative:
+            value = 1.0
+        else:
+            value = 0.0
+        return {'value': value, 'left': None, 'right': None, 'samples': len(samples), 'pos_samples': count_positive, 'neg_samples': count_negative}
+
 
     candidates = []
     for attribute in attributes:
@@ -78,9 +92,9 @@ def tdidt(samples, attributes, attribute_values):
         'attribute': best_attribute,
         'threshold': best_threshold,
         'gain': best_gain,
-        'samples': len(samples),
-        'left': tdidt(samples_below, attributes, attribute_values),
-        'right': tdidt(samples_above, attributes, attribute_values)
+        'samples': len(samples), 'pos_samples': count_positive, 'neg_samples': count_negative,
+        'left': tdidt(samples_below, attributes, attribute_values, max_depth-1),
+        'right': tdidt(samples_above, attributes, attribute_values, max_depth-1)
     }
     
 
@@ -115,7 +129,7 @@ def _accuracy(result, class_labels):
     
 if __name__ == '__main__':
     header, attribute_values, entries = read_data("data/gene_expression_training.csv")
-    tree = tdidt(entries, header, attribute_values)
+    tree = tdidt(entries, header, attribute_values, 4)
 
     generate_dot_from_graph(tree, 'output.dot')
     #pprint(tree)
