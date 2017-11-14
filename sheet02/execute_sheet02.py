@@ -23,3 +23,4 @@ if __name__ == '__main__':
     print("Depth: {}".format(depth))
     print("Accuracy Train: " + str(accuracy(res_train, class_labels_train)))
     print("Accuracy Test: " + str(accuracy(res_test, class_labels_test)))
+    postOrder(tree)

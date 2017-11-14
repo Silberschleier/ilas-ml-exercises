@@ -95,4 +95,15 @@ def tdidt(samples, attributes, attribute_values, max_depth):
         'right': tdidt(samples_above, attributes, attribute_values, max_depth-1)
     }
     
+def postOrder(tree):
+    if (tree['right'] != None):
+        postOrder(tree['right'])
+    if (tree['left'] != None):
+        postOrder(tree['left'])
+    _test(tree)                     #Testfunktion zur Verifizierung der richtigen Reihenfolge
 
+def _test(tree):
+    if (tree['left'] == None and tree['right'] == None):
+        print('Leaf with value ' + str(tree['value']))
+    else:
+        print('Node with attribute ' + str(tree['attribute']))
