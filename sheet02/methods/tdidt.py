@@ -87,6 +87,7 @@ def tdidt(samples, attributes, attribute_values, max_depth):
     samples_below, samples_above = _split_samples(samples, best_attribute, best_threshold)
 
     return {
+        'value': None,                  #Added for converting Node to leaf
         'attribute': best_attribute,
         'threshold': best_threshold,
         'gain': best_gain,
@@ -94,7 +95,52 @@ def tdidt(samples, attributes, attribute_values, max_depth):
         'left': tdidt(samples_below, attributes, attribute_values, max_depth-1),
         'right': tdidt(samples_above, attributes, attribute_values, max_depth-1)
     }
-    
+
+def postPruningError(tree):
+    #recursive postOrder:
+    if (tree['right'] != None):
+        postPruningError(tree['right'])
+    if (tree['left'] != None):
+        postPruningError(tree['left'])
+    #pruningFunktion:
+    if (tree['right'] != None and tree['left'] != None):            #Node not leaf
+        if (tree['left']['left'] == None and tree['left']['right'] == None and tree['right']['left'] == None and tree['right']['right'] == None):           #Node with only leafs as childs
+            #counting right classified samples
+            countingRight = 0;
+            if (tree['left']['value'] == 1.0):
+                countingRight += tree['left']['pos_samples']
+            if (tree['left']['value'] == 0.0):
+                countingRight += tree['left']['neg_samples']
+            if (tree['right']['value'] == 1.0):
+                countingRight += tree['left']['pos_samples']
+            if (tree['right']['value'] == 0.0):
+                countingRight += tree['left']['neg_samples']
+            #counting pos and neg samples
+            countingPos = tree['left']['pos_samples'] + tree['right']['pos_samples']
+            countingNeg = tree['left']['neg_samples'] + tree['right']['neg_samples']
+            #compare neg and pos to find the greater on    [kann man bestimmt kürzer machen indem man countingRight > Max(countingPos, countingNeg) als if Bedingung nimmt]
+            if (countingPos >= countingNeg):
+                countingMax = countingPos
+            else:
+                countingMax = countingNeg
+            #compare countingMax and countingRight to find out if the node will stay or changed
+            if (countingMax >= countingRight):
+                #transform node to leaf
+                tree['left'] = None
+                tree['right'] = None
+                tree['attribute'] = None
+                tree['treshold'] = None
+                tree['gain'] = None
+                tree['samples'] = countingNeg + countingPos
+                tree['pos_sampels'] = countingPos
+                tree['neg_sampels'] = countingNeg
+                #set value of the leaf wrt countingMax
+                if (countingMax == countingNeg):
+                    tree['value'] = 0.0
+                else:
+                    tree['value'] = 1.0
+
+
 def postOrder(tree):
     if (tree['right'] != None):
         postOrder(tree['right'])
