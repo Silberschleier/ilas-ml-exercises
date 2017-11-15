@@ -2,6 +2,21 @@ import csv
 from math import log
 from operator import itemgetter
 
+# Nodes and leafs of the tree are structs in the form:
+#{
+#'value': classifikation of the leaf or None for Node
+#'attribute': splitAttribut or None for leaf
+#'threshold': splitTreshold or None for leaf
+#'gain': splitGain or None for leaf
+#'samples': number of samples from training
+#'pos_samples': number of positive samples from training
+#'neg_samples': number of negative samples from training
+#'samples_test': number of samples from test
+#'pos_samples_test': number of positive samples from test
+#'neg_samples_test': number of negative samples from test
+#'left': left childTree or None for leaf
+#'right': right childTree or None for leaf
+#}
 
 def read_data(path):
     entries = []
@@ -68,14 +83,14 @@ def tdidt(samples, attributes, attribute_values, max_depth):
     count_positive = _pos_classification_count(samples)
     count_negative = len(samples) - count_positive
     if _is_perfectly_classified(samples):
-        return {'value': samples[0]['class_label'], 'left': None, 'right': None, 'samples': len(samples), 'pos_samples': count_positive, 'neg_samples': count_negative}
+        return {'value': samples[0]['class_label'], 'left': None, 'right': None, 'samples': len(samples), 'pos_samples': count_positive, 'neg_samples': count_negative, 'attribute': None, 'threshold': None, 'gain': None, 'samples_test': None, 'pos_samples_test': None, 'neg_samples_test': None}
 
     if max_depth == 0:
         if count_positive >= count_negative:
             value = 1.0
         else:
             value = 0.0
-        return {'value': value, 'left': None, 'right': None, 'samples': len(samples), 'pos_samples': count_positive, 'neg_samples': count_negative}
+        return {'value': value, 'left': None, 'right': None, 'samples': len(samples), 'pos_samples': count_positive, 'neg_samples': count_negative, 'attribute': None, 'threshold': None, 'gain': None, 'samples_test': None, 'pos_samples_test': None, 'neg_samples_test': None}
 
 
     candidates = []
@@ -92,6 +107,7 @@ def tdidt(samples, attributes, attribute_values, max_depth):
         'threshold': best_threshold,
         'gain': best_gain,
         'samples': len(samples), 'pos_samples': count_positive, 'neg_samples': count_negative,
+        'samples_test': None, 'pos_samples_test': None, 'neg_samples_test': None,
         'left': tdidt(samples_below, attributes, attribute_values, max_depth-1),
         'right': tdidt(samples_above, attributes, attribute_values, max_depth-1)
     }
