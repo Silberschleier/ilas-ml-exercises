@@ -4,8 +4,8 @@ Created on Wed Nov 15 20:21:08 2017
 
 @author: Maren
 """
-
-from tdidt import read_data, tdidt
+import json
+from tdidt import read_data
 
 def _is_leaf(tree):
     return (tree['left'] == None and tree['right'] == None)
@@ -37,8 +37,9 @@ def classify_and_extract_rules(tree, samples, attributes, attribute_values):
     return rules
 
 
+with open('trees/ausgabe_depth_3.json') as fp:
+  tree = json.load(fp)
 header_train, attribute_values_train, entries_train = read_data("../data/gene_expression_training.csv")
-tree = tdidt(entries_train, header_train, attribute_values_train, 3)
 
 rules = classify_and_extract_rules(tree, entries_train, header_train, attribute_values_train)
 for i in range(len(rules)):
