@@ -2,7 +2,7 @@ from methods import *
 import json
 
 if __name__ == '__main__':
-    depth = 3
+    depth = 10
     header_train, attribute_values_train, entries_train = read_data("data/gene_expression_training.csv")
     #tree = tdidt(entries_train, header_train, attribute_values_train, depth)
 
@@ -33,10 +33,10 @@ if __name__ == '__main__':
         class_labels_test.append(entry['class_label'])
 
     reduced_error_pruning(tree, tree, entries_test, header_test, attribute_values_test, class_labels_test)
+    generate_dot_from_graph(tree, 'pruned_output_depth-{}.dot'.format(depth))
 
     res_test = classify(tree, entries_test, header_test, attribute_values_test)
     res_train = classify(tree, entries_train, header_train, attribute_values_train)
-
 
 
     class_labels_train = []
