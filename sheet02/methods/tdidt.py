@@ -111,6 +111,17 @@ def tdidt(samples, attributes, attribute_values, max_depth):
         'left': tdidt(samples_below, attributes, attribute_values, max_depth-1),
         'right': tdidt(samples_above, attributes, attribute_values, max_depth-1)
     }
+    
+def count_samples_recursive(tree):
+    if tree['value'] != None:
+        countingRight = 0
+        if (tree['value'] == 0.0):
+            countingRight += tree['neg_samples']
+        if (tree['value'] == 1.0):
+            countingRight += tree['pos_samples']
+        return countingRight
+    else:
+        return count_samples_recursive(tree['left']) + count_samples_recursive(tree['right'])
 
 def postPruningError(tree):
     #recursive postOrder:
@@ -120,20 +131,12 @@ def postPruningError(tree):
         postPruningError(tree['left'])
     #pruningFunktion:
     if (tree['right'] != None and tree['left'] != None):            #Node not leaf
-        if (tree['left']['left'] == None and tree['left']['right'] == None and tree['right']['left'] == None and tree['right']['right'] == None):           #Node with only leafs as childs
+        if(True):
             #counting right classified samples
-            countingRight = 0;
-            if (tree['left']['value'] == 1.0):
-                countingRight += tree['left']['pos_samples']
-            if (tree['left']['value'] == 0.0):
-                countingRight += tree['left']['neg_samples']
-            if (tree['right']['value'] == 1.0):
-                countingRight += tree['left']['pos_samples']
-            if (tree['right']['value'] == 0.0):
-                countingRight += tree['left']['neg_samples']
+            countingRight = count_samples_recursive(tree)
             #counting pos and neg samples
-            countingPos = tree['left']['pos_samples'] + tree['right']['pos_samples']
-            countingNeg = tree['left']['neg_samples'] + tree['right']['neg_samples']
+            countingPos = tree['pos_samples']
+            countingNeg = tree['neg_samples']
             #compare neg and pos to find the greater on    [kann man bestimmt kürzer machen indem man countingRight > Max(countingPos, countingNeg) als if Bedingung nimmt]
             if (countingPos >= countingNeg):
                 countingMax = countingPos
