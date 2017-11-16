@@ -5,6 +5,7 @@ Created on Wed Nov 15 20:21:08 2017
 @author: Maren
 """
 import json
+from math import sqrt
 from tdidt import read_data
 from classification import accuracy
 
@@ -79,8 +80,14 @@ def observed_error():
     pass
 
 
-def err_pessimistic(rule):
-    pass
+def err_pessimistic(accuracy, length):
+    n = length
+    e = 1 - accuracy / length
+    z = 0.674
+    numerator = e + z*z/(2*n) + z * sqrt(e / n - e*e/n + z*z/(4*n*n))
+    denominator = 1 + z*z/n
+
+    return numerator / denominator
 
 
 with open('trees/ausgabe_depth_3.json') as fp:
