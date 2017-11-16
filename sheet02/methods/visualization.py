@@ -8,7 +8,7 @@ def _add_node(G, subtree, parent, left):
 
     node_id = index
     index += 1
-    if 'threshold' in subtree:
+    if subtree['left'] and subtree['right']:
         G.add_node(node_id, label="{} &le; {}?\nsamples = {} ({}+, {}-)\ngain = {}".format(subtree['attribute'],
                                                                                            subtree['threshold'],
                                                                                            subtree['samples'],

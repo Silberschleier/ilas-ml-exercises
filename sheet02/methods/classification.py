@@ -1,9 +1,9 @@
 def _is_leaf(tree):
-    return (tree['left'] == None and tree['right'] == None)
+    return tree['left'] is None and tree['right'] is None
 
 
 def classify_one_sample(tree, sample, sample_index, attributes, attribute_values):
-    if _is_leaf(tree) == True:
+    if _is_leaf(tree):
         return tree['value']
     else:
         if attribute_values[tree['attribute']][sample_index] <= tree['threshold']:
