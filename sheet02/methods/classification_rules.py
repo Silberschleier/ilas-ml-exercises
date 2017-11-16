@@ -56,7 +56,7 @@ def err_pessimistic(rule):
 
 
 with open('trees/ausgabe_depth_10.json') as fp:
-  tree = json.load(fp)
+    tree = json.load(fp)
 header_train, attribute_values_train, entries_train = read_data("../data/gene_expression_training.csv")
 
 rules = classify_and_extract_rules(tree, entries_train, header_train, attribute_values_train)
