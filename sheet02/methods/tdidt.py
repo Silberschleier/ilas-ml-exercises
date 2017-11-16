@@ -1,6 +1,6 @@
 import csv
 from .classification import classify, accuracy
-from math import log
+from math import log, sqrt
 from operator import itemgetter
 
 
@@ -135,12 +135,12 @@ def count_samples_recursive(tree):
         return count_samples_recursive(tree['left']) + count_samples_recursive(tree['right'])
 
 
-def reduced_error_pruning(tree, subtree, samples, attributes, attribute_values, class_labels):
+def reduced_error_pruning_by_accuracy(tree, subtree, samples, attributes, attribute_values, class_labels):
     # recursive postOrder:
     if subtree['left'] is not None:
-        reduced_error_pruning(tree, subtree['right'], samples, attributes, attribute_values, class_labels)
+        reduced_error_pruning_by_accuracy(tree, subtree['right'], samples, attributes, attribute_values, class_labels)
     if subtree['right'] is not None:
-        reduced_error_pruning(tree, subtree['left'], samples, attributes, attribute_values, class_labels)
+        reduced_error_pruning_by_accuracy(tree, subtree['left'], samples, attributes, attribute_values, class_labels)
 
     if subtree['right'] is not None and subtree['left'] is not None:
         majority = _majority_class(subtree['pos_samples'], subtree['neg_samples'])
@@ -155,16 +155,33 @@ def reduced_error_pruning(tree, subtree, samples, attributes, attribute_values, 
             subtree.update(unpruned_backup)
 
 
-def postOrder(tree):
-    if (tree['right'] != None):
-        postOrder(tree['right'])
-    if (tree['left'] != None):
-        postOrder(tree['left'])
-    _test(tree)  # Testfunktion zur Verifizierung der richtigen Reihenfolge
+def reduced_error_pruning_by_pess_error(tree, subtree, samples, attributes, attribute_values, class_labels):
+    # recursive postOrder:
+    if subtree['left'] is not None:
+        reduced_error_pruning_by_accuracy(tree, subtree['right'], samples, attributes, attribute_values, class_labels)
+    if subtree['right'] is not None:
+        reduced_error_pruning_by_accuracy(tree, subtree['left'], samples, attributes, attribute_values, class_labels)
+
+    if subtree['right'] is not None and subtree['left'] is not None:
+        majority = _majority_class(subtree['pos_samples'], subtree['neg_samples'])
+        classification_unpruned = classify(tree, samples, attributes, attribute_values)
+
+        unpruned_backup = dict(subtree)     # Well, nobody said the solution should be elegant, right?
+        subtree.update({'value': majority, 'left': None, 'right': None, 'samples': subtree['pos_samples'] + subtree['neg_samples'],
+                       'pos_samples': subtree['pos_samples'], 'neg_samples': subtree['neg_samples']})
+        classification_pruned = classify(tree, samples, attributes, attribute_values)
+        accuracy_pruned = accuracy(classification_pruned, class_labels)
+        accuracy_unpruned = accuracy(classification_unpruned, class_labels)
+
+        if err_pessimistic(accuracy_pruned, len(samples)) > err_pessimistic(accuracy_unpruned, len(samples)):
+            subtree.update(unpruned_backup)
 
 
-def _test(tree):
-    if tree['left'] is None and tree['right'] is None:
-        print('Leaf with value ' + str(tree['value']))
-    else:
-        print('Node with attribute ' + str(tree['attribute']))
+def err_pessimistic(accuracy, length):
+    n = length
+    e = 1 - accuracy / length
+    z = 0.674
+    numerator = e + z*z/(2*n) + z * sqrt(e / n - e*e/n + z*z/(4*n*n))
+    denominator = 1 + z*z/n
+
+    return numerator / denominator

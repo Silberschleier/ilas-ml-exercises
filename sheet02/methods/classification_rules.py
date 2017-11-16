@@ -72,11 +72,15 @@ def prune_rules(rules):
     for r in rules:
         for l in r['rules']:
             rule_without_l = r - set(l)
-            if err_pessimistic(rule_without_l) < err_pessimistic(r):
+            if get_pessimistic_error_for_rule(rule_without_l) < get_pessimistic_error_for_rule(r):
                 r.remove(l)
                 
 
 def observed_error():
+    pass
+
+
+def get_pessimistic_error_for_rule(rule):
     pass
 
 

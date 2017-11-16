@@ -1,4 +1,5 @@
 from methods import *
+from copy import deepcopy
 import json
 
 if __name__ == '__main__':
@@ -28,12 +29,14 @@ if __name__ == '__main__':
     print("Accuracy Train: " + str(accuracy(res_train, class_labels_train)))
     print("Accuracy Test: " + str(accuracy(res_test, class_labels_test)))
 
+    original_tree = deepcopy(tree)
+
     class_labels_test = []
     for entry in entries_test:
         class_labels_test.append(entry['class_label'])
 
-    reduced_error_pruning(tree, tree, entries_test, header_test, attribute_values_test, class_labels_test)
-    generate_dot_from_graph(tree, 'pruned_output_depth-{}.dot'.format(depth))
+    reduced_error_pruning_by_accuracy(tree, tree, entries_test, header_test, attribute_values_test, class_labels_test)
+    generate_dot_from_graph(tree, 'pruned_acc_output_depth-{}.dot'.format(depth))
 
     res_test = classify(tree, entries_test, header_test, attribute_values_test)
     res_train = classify(tree, entries_train, header_train, attribute_values_train)
@@ -42,7 +45,27 @@ if __name__ == '__main__':
     for entry in entries_train:
         class_labels_train.append(entry['class_label'])
 
-    print("Accuracies after reduced error pruning:")
+    print("Accuracies after reduced error pruning by accuracy:")
+    print("Accuracy Train: " + str(accuracy(res_train, class_labels_train)))
+    print("Accuracy Test: " + str(accuracy(res_test, class_labels_test)))
+
+    class_labels_test = []
+    for entry in entries_test:
+        class_labels_test.append(entry['class_label'])
+
+    tree = original_tree
+
+    reduced_error_pruning_by_pess_error(tree, tree, entries_test, header_test, attribute_values_test, class_labels_test)
+    generate_dot_from_graph(tree, 'pruned_err_output_depth-{}.dot'.format(depth))
+
+    res_test = classify(tree, entries_test, header_test, attribute_values_test)
+    res_train = classify(tree, entries_train, header_train, attribute_values_train)
+
+    class_labels_train = []
+    for entry in entries_train:
+        class_labels_train.append(entry['class_label'])
+
+    print("Accuracies after reduced error pruning by pessimistic error:")
     print("Accuracy Train: " + str(accuracy(res_train, class_labels_train)))
     print("Accuracy Test: " + str(accuracy(res_test, class_labels_test)))
     #print(tree)
