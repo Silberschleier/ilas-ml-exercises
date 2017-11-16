@@ -38,12 +38,11 @@ if __name__ == '__main__':
     res_test = classify(tree, entries_test, header_test, attribute_values_test)
     res_train = classify(tree, entries_train, header_train, attribute_values_train)
 
-
     class_labels_train = []
     for entry in entries_train:
         class_labels_train.append(entry['class_label'])
 
-    print("Accuracies after pruning:")
+    print("Accuracies after reduced error pruning:")
     print("Accuracy Train: " + str(accuracy(res_train, class_labels_train)))
     print("Accuracy Test: " + str(accuracy(res_test, class_labels_test)))
     #print(tree)

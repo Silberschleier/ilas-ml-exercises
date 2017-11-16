@@ -137,9 +137,9 @@ def count_samples_recursive(tree):
 
 def reduced_error_pruning(tree, subtree, samples, attributes, attribute_values, class_labels):
     # recursive postOrder:
-    if subtree['right'] is not None:
-        reduced_error_pruning(tree, subtree['right'], samples, attributes, attribute_values, class_labels)
     if subtree['left'] is not None:
+        reduced_error_pruning(tree, subtree['right'], samples, attributes, attribute_values, class_labels)
+    if subtree['right'] is not None:
         reduced_error_pruning(tree, subtree['left'], samples, attributes, attribute_values, class_labels)
 
     if subtree['right'] is not None and subtree['left'] is not None:
