@@ -1,0 +1,53 @@
+strict digraph "" {
+	node [label="\N",
+		shape=box
+	];
+	26	 [color="#5191f7",
+		label="APP &le; 0.3985?
+samples = 701 (355+, 346-)
+gain = 0.8187"];
+	27	 [color="#5191f7",
+		label="pMTOR &le; 0.6062?
+samples = 319 (76+, 243-)
+gain = 0.5971"];
+	26 -> 27	 [headlabel=True];
+	32	 [color="#5191f7",
+		label="AMPKA &le; 0.3848?
+samples = 382 (279+, 103-)
+gain = 0.6887"];
+	26 -> 32	 [headlabel=False];
+	28	 [color="#5191f7",
+		label="S6 &le; 0.3597?
+samples = 33 (31+, 2-)
+gain = 0"];
+	27 -> 28	 [headlabel=True];
+	31	 [color="#ffd5b2",
+		label="class_label = False
+samples = 286 (45+, 241-)"];
+	27 -> 31	 [headlabel=False];
+	29	 [color="#ffd5b2",
+		label="class_label = False
+samples = 2 (0+, 2-)"];
+	28 -> 29	 [headlabel=True];
+	30	 [color="#cdffb2",
+		label="class_label = True
+samples = 31 (31+, 0-)"];
+	28 -> 30	 [headlabel=False];
+	33	 [color="#cdffb2",
+		label="class_label = True
+samples = 211 (192+, 19-)"];
+	32 -> 33	 [headlabel=True];
+	34	 [color="#5191f7",
+		label="APP &le; 0.4581?
+samples = 171 (87+, 84-)
+gain = 0.6915"];
+	32 -> 34	 [headlabel=False];
+	35	 [color="#ffd5b2",
+		label="class_label = False
+samples = 99 (24+, 75-)"];
+	34 -> 35	 [headlabel=True];
+	36	 [color="#cdffb2",
+		label="class_label = True
+samples = 72 (63+, 9-)"];
+	34 -> 36	 [headlabel=False];
+}
