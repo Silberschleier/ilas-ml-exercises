@@ -8,6 +8,7 @@ import json
 from math import sqrt
 from tdidt import read_data
 from classification import accuracy
+from copy import deepcopy
 
 def _is_leaf(tree):
     return (tree['left'] == None and tree['right'] == None)
@@ -69,20 +70,19 @@ def classify_with_rules(rules, samples, attributes, attribute_values):
 
 
 def prune_rules(rules, samples, attributes, attribute_values, class_labels, accuracy_original):
-    backup_rules = rules
     for r in rules:
-        backup_r = r
         for l in r['rules']:
+            backup_rules = list(rules)
+            backup_r = deepcopy(r)
             rule_without_l = { 'value': r['value'], 'rules': r['rules'] - {l} }
-            r = rule_without_l
             rules.append(rule_without_l)
             rules.remove(r)
             res_without_l = classify_with_rules(rules, samples, attributes, attribute_values)
             accuracy_without_l = accuracy(res_without_l, class_labels)
+            r = deepcopy(rule_without_l)
             if err_pessimistic(accuracy_without_l, len(samples)) > err_pessimistic(accuracy_original, len(samples)):
                 rules = backup_rules
                 r = backup_r
-    
 
 
 def err_pessimistic(accuracy, length):
@@ -95,7 +95,7 @@ def err_pessimistic(accuracy, length):
     return numerator / denominator
 
 
-with open('trees/ausgabe_depth_3.json') as fp:
+with open('trees/ausgabe_depth_10.json') as fp:
     tree = json.load(fp)
 header_train, attribute_values_train, entries_train = read_data("../data/gene_expression_training.csv")
 
