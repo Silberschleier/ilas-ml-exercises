@@ -1,5 +1,5 @@
 import csv
-from .classification import classify, accuracy
+from classification import classify, accuracy
 from math import log, sqrt
 from operator import itemgetter
 
@@ -158,9 +158,9 @@ def reduced_error_pruning_by_accuracy(tree, subtree, samples, attributes, attrib
 def reduced_error_pruning_by_pess_error(tree, subtree, samples, attributes, attribute_values, class_labels):
     # recursive postOrder:
     if subtree['left'] is not None:
-        reduced_error_pruning_by_accuracy(tree, subtree['right'], samples, attributes, attribute_values, class_labels)
+        reduced_error_pruning_by_pess_error(tree, subtree['right'], samples, attributes, attribute_values, class_labels)
     if subtree['right'] is not None:
-        reduced_error_pruning_by_accuracy(tree, subtree['left'], samples, attributes, attribute_values, class_labels)
+        reduced_error_pruning_by_pess_error(tree, subtree['left'], samples, attributes, attribute_values, class_labels)
 
     if subtree['right'] is not None and subtree['left'] is not None:
         majority = _majority_class(subtree['pos_samples'], subtree['neg_samples'])
@@ -179,7 +179,7 @@ def reduced_error_pruning_by_pess_error(tree, subtree, samples, attributes, attr
 
 def err_pessimistic(accuracy, length):
     n = length
-    e = 1 - accuracy / length
+    e = (1 - accuracy) / length
     z = 0.674
     numerator = e + z*z/(2*n) + z * sqrt(e / n - e*e/n + z*z/(4*n*n))
     denominator = 1 + z*z/n

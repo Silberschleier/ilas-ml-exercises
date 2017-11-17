@@ -68,25 +68,26 @@ def classify_with_rules(rules, samples, attributes, attribute_values):
     return res
 
 
-def prune_rules(rules):
+def prune_rules(rules, samples, attributes, attribute_values, class_labels, accuracy_original):
+    backup_rules = rules
     for r in rules:
+        backup_r = r
         for l in r['rules']:
-            rule_without_l = r - set(l)
-            if get_pessimistic_error_for_rule(rule_without_l) < get_pessimistic_error_for_rule(r):
-                r.remove(l)
-                
-
-def observed_error():
-    pass
-
-
-def get_pessimistic_error_for_rule(rule):
-    pass
+            rule_without_l = { 'value': r['value'], 'rules': r['rules'] - {l} }
+            r = rule_without_l
+            rules.append(rule_without_l)
+            rules.remove(r)
+            res_without_l = classify_with_rules(rules, samples, attributes, attribute_values)
+            accuracy_without_l = accuracy(res_without_l, class_labels)
+            if err_pessimistic(accuracy_without_l, len(samples)) > err_pessimistic(accuracy_original, len(samples)):
+                rules = backup_rules
+                r = backup_r
+    
 
 
 def err_pessimistic(accuracy, length):
     n = length
-    e = 1 - accuracy / length
+    e = (1 - accuracy) / length
     z = 0.674
     numerator = e + z*z/(2*n) + z * sqrt(e / n - e*e/n + z*z/(4*n*n))
     denominator = 1 + z*z/n
@@ -99,8 +100,8 @@ with open('trees/ausgabe_depth_3.json') as fp:
 header_train, attribute_values_train, entries_train = read_data("../data/gene_expression_training.csv")
 
 rules = classify_and_extract_rules(tree, entries_train, header_train, attribute_values_train)
-for i in range(len(rules)):
-    print("Rule " + str(i+1) + ": " + _rules_to_string(rules[i]))
+#for i in range(len(rules)):
+    #print("Rule " + str(i+1) + ": " + _rules_to_string(rules[i]))
 
 header_test, attribute_values_test, entries_test = read_data("../data/gene_expression_test.csv")
 res_test = classify_with_rules(rules, entries_test, header_test, attribute_values_test)
@@ -113,6 +114,16 @@ for entry in entries_test:
 class_labels_train = []
 for entry in entries_train:
     class_labels_train.append(entry['class_label'])
+
+print("Accuracy Train: " + str(accuracy(res_train, class_labels_train)))
+print("Accuracy Test: " + str(accuracy(res_test, class_labels_test)))
+
+prune_rules(rules, entries_test, header_test, attribute_values_test, class_labels_test, accuracy(res_test, class_labels_test))
+
+#print("Rules nach Pruning: ", rules)
+
+res_test = classify_with_rules(rules, entries_test, header_test, attribute_values_test)
+res_train = classify_with_rules(rules, entries_train, header_train, attribute_values_train)
 
 print("Accuracy Train: " + str(accuracy(res_train, class_labels_train)))
 print("Accuracy Test: " + str(accuracy(res_test, class_labels_test)))
