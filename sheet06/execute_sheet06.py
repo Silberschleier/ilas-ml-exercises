@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial.distance import cosine
 from operator import itemgetter
+from heapq import nsmallest
 
 
 def read_data(path):
@@ -15,8 +16,7 @@ def classify(k, trainings_data, test_data, trainings_labels, test_labels):
     correct_classifications = 0
     for sample_index, sample in enumerate(test_data):
         d = [(i, cosine(trainings_data[i, :], sample)) for i in range(len(trainings_data))]
-        d.sort(key=itemgetter(1))
-        neighbours = d[:k + 1]
+        neighbours = nsmallest(k, d, key=itemgetter(1))
 
         positive = 0
         for i, value in neighbours:
@@ -38,6 +38,7 @@ if __name__ == '__main__':
     training_means = np.mean(trainings_data, 0)
     training_std = np.std(trainings_data, 0)
 
+    # Normalize
     normalized_trainings_data = np.array(trainings_data) - training_means
     normalized_trainings_data /= training_std
     normalized_test_data = np.array(test_data) - training_means
@@ -47,7 +48,6 @@ if __name__ == '__main__':
     selected_features = [1, 3]
     filtered_trainings_data = normalized_trainings_data[:, selected_features]
     filtered_test_data = normalized_test_data[:, selected_features]
-    print(filtered_trainings_data)
 
     print('Task 3:')
     print('-------\n')
