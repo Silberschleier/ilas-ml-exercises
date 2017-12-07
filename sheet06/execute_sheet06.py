@@ -43,6 +43,20 @@ if __name__ == '__main__':
     normalized_test_data = np.array(test_data) - training_means
     normalized_test_data /= training_std
 
+    # Filter attributes for task 4.4
+    selected_features = [1, 3]
+    filtered_trainings_data = normalized_trainings_data[:, selected_features]
+    filtered_test_data = normalized_test_data[:, selected_features]
+    print(filtered_trainings_data)
+
+    print('Task 3:')
+    print('-------\n')
     for k in [1, 3, 5]:
         accuracy = classify(k, normalized_trainings_data, normalized_test_data, trainings_labels, test_labels)
+        print('Accuracy for k = {}: {}'.format(k, accuracy))
+
+    print('\n\nTask 4.4:')
+    print('---------\n')
+    for k in []:
+        accuracy = classify(k, filtered_trainings_data, filtered_test_data, trainings_labels, test_labels)
         print('Accuracy for k = {}: {}'.format(k, accuracy))
