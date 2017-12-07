@@ -1,7 +1,11 @@
 import numpy as np
 from scipy.spatial.distance import cosine
 from operator import itemgetter
+<<<<<<< HEAD
 from tdidt_classification import tdidt, classify_tdidt
+=======
+from heapq import nsmallest
+>>>>>>> 9fbba220ac8628ea25a22cdc953a48016d3b969a
 
 
 def read_data(path):
@@ -29,8 +33,7 @@ def classify(k, trainings_data, test_data, trainings_labels, test_labels):
     correct_classifications = 0
     for sample_index, sample in enumerate(test_data):
         d = [(i, cosine(trainings_data[i, :], sample)) for i in range(len(trainings_data))]
-        d.sort(key=itemgetter(1))
-        neighbours = d[:k + 1]
+        neighbours = nsmallest(k, d, key=itemgetter(1))
 
         positive = 0
         for i, value in neighbours:
@@ -52,6 +55,7 @@ if __name__ == '__main__':
     training_means = np.mean(trainings_data, 0)
     training_std = np.std(trainings_data, 0)
 
+    # Normalize
     normalized_trainings_data = np.array(trainings_data) - training_means
     normalized_trainings_data /= training_std
     normalized_test_data = np.array(test_data) - training_means
@@ -74,3 +78,20 @@ if __name__ == '__main__':
     header_test, attribute_values_test, entries_test = convert_data(test_data_labeled)
     accuracy_tdidt = classify_tdidt(tdidt, entries_test, header_test, attribute_values_test, test_labels)
     print('Accuracy des Decision Tree mit Tiefe ' + str(depth) + ': ' + str(accuracy_tdidt))
+
+    # Filter attributes for task 4.4
+    selected_features = [1, 3]
+    filtered_trainings_data = normalized_trainings_data[:, selected_features]
+    filtered_test_data = normalized_test_data[:, selected_features]
+
+    print('Task 3:')
+    print('-------\n')
+    for k in [1, 3, 5]:
+        accuracy = classify(k, normalized_trainings_data, normalized_test_data, trainings_labels, test_labels)
+        print('Accuracy for k = {}: {}'.format(k, accuracy))
+
+    print('\n\nTask 4.4:')
+    print('---------\n')
+    for k in []:
+        accuracy = classify(k, filtered_trainings_data, filtered_test_data, trainings_labels, test_labels)
+        print('Accuracy for k = {}: {}'.format(k, accuracy))
