@@ -1,11 +1,9 @@
 import numpy as np
 from scipy.spatial.distance import cosine
 from operator import itemgetter
-<<<<<<< HEAD
 from tdidt_classification import tdidt, classify_tdidt
-=======
 from heapq import nsmallest
->>>>>>> 9fbba220ac8628ea25a22cdc953a48016d3b969a
+
 
 
 def read_data(path):
