@@ -113,3 +113,9 @@ def classify_tdidt(tree, samples, attributes, attribute_values, class_labels):
         if res[i] == class_labels[i]:
             true_classified += 1
     return true_classified / len(res)
+
+def get_attributes(tree, attr_list):
+    if _is_leaf(tree) == False:
+        attr_list.append(tree['attribute']-1)
+        get_attributes(tree['left'], attr_list)
+        get_attributes(tree['right'], attr_list)
